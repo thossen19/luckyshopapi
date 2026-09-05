@@ -1,0 +1,2 @@
+﻿-- AlterEnum
+ALTER TYPE `PromotionType` MODIFY VALUE 'CASH_BACK' AFTER 'FLASH_SALE';
