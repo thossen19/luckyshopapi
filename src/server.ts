@@ -8,9 +8,10 @@ async function bootstrap() {
     await prisma.$connect();
     logger.info('Database connected successfully');
 
-    app.listen(config.port, () => {
+    app.listen(config.port, '0.0.0.0', () => {
       logger.info(`Server running on port ${config.port} in ${config.nodeEnv} mode`);
-      logger.info(`API: http://localhost:${config.port}/api/health`);
+      logger.info(`Listening on 0.0.0.0:${config.port}`);
+      logger.info(`API: http://0.0.0.0:${config.port}/api/health`);
     });
   } catch (error) {
     logger.error('Failed to start server:', error);

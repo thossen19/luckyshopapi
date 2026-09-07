@@ -189,6 +189,10 @@ useAsync('/api/v1/search', searchRoutes);
 useAsync('/api/v1/track-order', trackOrderRoutes);
 
 // Health check
+app.get('/', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });

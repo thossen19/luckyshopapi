@@ -28,12 +28,17 @@ async function repairFailedMigrations() {
 
     const customPagesCreated = await tableExists('custom_pages');
     const flag = customPagesCreated ? '--applied' : '--rolled-back';
-    console.log(`Repairing failed migration ${name} (${flag})...`);
-    execSync(`npx prisma migrate resolve ${flag} ${name}`, { stdio: 'inherit' });
+    try {
+      console.log(`Repairing failed migration ${name} (${flag})...`);
+      execSync(`npx prisma migrate resolve ${flag} ${name}`, { stdio: 'inherit' });
+    } catch (err) {
+      console.error(`Could not auto-resolve migration ${name}:`, err.message);
+    }
   }
 }
 
 async function main() {
+  console.log(`Starting with PORT=${process.env.PORT || '(unset, using 8080)'}`);
   try {
     await repairFailedMigrations();
   } finally {
