@@ -1,5 +1,5 @@
 {
-  "name": "Luckyshopapi",
+  "name": "luckyapi",
   "version": "1.0.0",
   "description": "Multi-tenant E-Commerce SaaS Platform Backend",
   "main": "dist/server.js",
