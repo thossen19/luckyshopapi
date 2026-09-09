@@ -1,14 +1,27 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  const isPlaceholder = !value || value.startsWith('CHANGE_ME') || value.startsWith('your-') || value.startsWith('sk_test') || value.startsWith('pk_test') || value.startsWith('whsec');
+  if (isPlaceholder) {
+    throw new Error(
+      `Missing required environment variable: ${name}.\n` +
+      `Set it in your deployment environment (e.g. Render -> Environment) then redeploy.\n` +
+      `Current value: ${value ? `"${value}" (placeholder)` : '(unset)'}`
+    );
+  }
+  return value;
+}
+
 export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT || '8080', 10),
-  databaseUrl: process.env.DATABASE_URL!,
+  databaseUrl: requireEnv('DATABASE_URL'),
   jwt: {
-    secret: process.env.JWT_SECRET!,
+    secret: requireEnv('JWT_SECRET'),
     expiresIn: process.env.JWT_EXPIRES_IN || '15m',
-    refreshSecret: process.env.JWT_REFRESH_SECRET!,
+    refreshSecret: requireEnv('JWT_REFRESH_SECRET'),
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
   redis: {
