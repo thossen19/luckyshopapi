@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
@@ -97,7 +98,7 @@ export class AuthService {
     try {
       const decoded = jwt.verify(token, config.jwt.refreshSecret) as { id: string };
       const storedToken = await prisma.refreshToken.findUnique({
-        where: { token },
+        where: { token: this.hashToken(token) },
         include: { user: true },
       });
 
@@ -117,7 +118,7 @@ export class AuthService {
   }
 
   async logout(refreshToken: string) {
-    await prisma.refreshToken.deleteMany({ where: { token: refreshToken } });
+    await prisma.refreshToken.deleteMany({ where: { token: this.hashToken(refreshToken) } });
   }
 
   async forgotPassword(email: string) {
@@ -218,8 +219,12 @@ export class AuthService {
     expiresAt.setDate(expiresAt.getDate() + 7);
 
     await prisma.refreshToken.create({
-      data: { token, userId, expiresAt },
+      data: { token: this.hashToken(token), userId, expiresAt },
     });
+  }
+
+  private hashToken(token: string): string {
+    return crypto.createHash('sha256').update(token).digest('hex');
   }
 }
 

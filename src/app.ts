@@ -108,6 +108,8 @@ function useAsync(path: string, router: Router) {
 
 const app: Application = express();
 
+app.set('trust proxy', 1);
+
 // Security
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
