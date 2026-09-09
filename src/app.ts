@@ -112,8 +112,11 @@ const app: Application = express();
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
+const allowedOrigins = [config.frontendUrl, config.adminUrl].filter(
+  (origin) => origin && !origin.includes('localhost') && !origin.includes('your-')
+);
 app.use(cors({
-  origin: [config.frontendUrl, config.adminUrl],
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
